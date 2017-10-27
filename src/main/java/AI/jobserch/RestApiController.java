@@ -45,11 +45,10 @@ import com.ibm.watson.developer_cloud.personality_insights.v3.model.Trait;
 public class RestApiController {
 	public static final Logger logger = LoggerFactory.getLogger(RestApiController.class);
 
-	@RequestMapping(value = "/jobSearch", method = RequestMethod.GET)
-	public String getJobs(@RequestParam(value = "name") String name,
-			@RequestParam(value = "desc") String userDesc) {
+	@RequestMapping(value = "/jobSearch", method = RequestMethod.POST , consumes =MediaType.APPLICATION_JSON_VALUE)
+	public String getJobs(@RequestBody User user) {
 
-		System.out.println("In jobsearch");
+		System.out.println("In jobsearch"+ user.getDesc());
 		List<String> jobs = new ArrayList<String>();
 		PersonalityInsights service = new PersonalityInsights("2017-10-13", "ce431ce2-c7b3-45a3-8481-3963a6556b47",
 				"IWqKLZzIuKRM");
@@ -60,7 +59,7 @@ public class RestApiController {
 		try {
 			Content content = new Content();
 			ContentItem item = new ContentItem();
-			item.setContent(userDesc);
+			item.setContent(user.getDesc());
 			item.setContentType("text/plain");
 			item.setLanguage("en");
 			content.addContentItem(item);
