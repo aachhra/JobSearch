@@ -45,10 +45,11 @@ import com.ibm.watson.developer_cloud.personality_insights.v3.model.Trait;
 public class RestApiController {
 	public static final Logger logger = LoggerFactory.getLogger(RestApiController.class);
 
-	@RequestMapping(value = "/jobSearch", method = RequestMethod.POST , consumes =MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE )
-	public String getJobs(@RequestBody User user) {
+	@RequestMapping(value = "/jobSearch", method = RequestMethod.GET)
+	public String getJobs(@RequestParam(value = "name") String name,
+			@RequestParam(value = "desc") String userDesc) {
 
-		System.out.println("In jobsearch"+ user.getDesc());
+		System.out.println("In jobsearch");
 		List<String> jobs = new ArrayList<String>();
 		PersonalityInsights service = new PersonalityInsights("2017-10-13", "ce431ce2-c7b3-45a3-8481-3963a6556b47",
 				"IWqKLZzIuKRM");
@@ -59,17 +60,14 @@ public class RestApiController {
 		try {
 			Content content = new Content();
 			ContentItem item = new ContentItem();
-			item.setContent(user.getDesc());
+			item.setContent(userDesc);
 			item.setContentType("text/plain");
 			item.setLanguage("en");
 			content.addContentItem(item);
 			ProfileOptions options = new ProfileOptions.Builder().contentItems(content.getContentItems())
 					.consumptionPreferences(true).rawScores(true).build();
 			Profile profile = service.getProfile(options).execute();
-			// System.out.println(profile.toString());
-
 			String jobMatcher = callJobAlogorithm(profile);
-
 			JsonParser parser = new JsonParser();
 			JsonObject json = (JsonObject) parser.parse(profile.toString());
 			json.add("jobMatches", parser.parse(jobMatcher.toString()));
@@ -82,7 +80,6 @@ public class RestApiController {
 		return null;
 
 	}
-
 	public String callJobAlogorithm(Profile profile) {
 
 		final String uri = new String("https://jobmatcher1.mybluemix.net/matchjob");
