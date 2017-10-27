@@ -66,7 +66,10 @@ public class RestApiController {
 			content.addContentItem(item);
 			ProfileOptions options = new ProfileOptions.Builder().contentItems(content.getContentItems())
 					.consumptionPreferences(true).rawScores(true).build();
+			
+			// Calling IBM WATSON personality insight app
 			Profile profile = service.getProfile(options).execute();
+			
 			String jobMatcher = callJobAlogorithm(profile);
 			JsonParser parser = new JsonParser();
 			JsonObject json = (JsonObject) parser.parse(profile.toString());
@@ -82,6 +85,7 @@ public class RestApiController {
 	}
 	public String callJobAlogorithm(Profile profile) {
 
+		//Job matcher app hosted on IBM bluemix
 		final String uri = new String("https://jobmatcher1.mybluemix.net/matchjob");
 		RestTemplate restTemplate = new RestTemplate();
 		// Add the Jackson message converter
