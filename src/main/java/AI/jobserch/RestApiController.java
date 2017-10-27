@@ -46,7 +46,7 @@ public class RestApiController {
 	public static final Logger logger = LoggerFactory.getLogger(RestApiController.class);
 
 	@RequestMapping(value = "/jobSearch", method = RequestMethod.GET)
-	public ResponseEntity<String> getJobs(@RequestParam(value = "name") String name,
+	public ResponseEntity<JsonObject> getJobs(@RequestParam(value = "name") String name,
 			@RequestParam(value = "desc") String userDesc) {
 
 		System.out.println("In jobsearch");
@@ -71,21 +71,12 @@ public class RestApiController {
 
 			String jobMatcher = callJobAlogorithm(profile);
 
-			/*
-			 * List<LinkedHashMap<String, String>> jobmap = new
-			 * ArrayList<LinkedHashMap<String, String>>(); LinkedHashMap<String,
-			 * String> map = new LinkedHashMap<String, String>();
-			 * map.put("Job Name", "Teacher"); map.put("Job Description",
-			 * "This is first job"); map.put("Match percentage", "80%");
-			 * jobmap.add(map);
-			 */
-
 			JsonParser parser = new JsonParser();
 			JsonObject json = (JsonObject) parser.parse(profile.toString());
 			json.add("jobMatches", parser.parse(jobMatcher.toString()));
 			System.out.println(json);
 
-			return new ResponseEntity<String>(json.toString(), HttpStatus.OK);
+			return new ResponseEntity<JsonObject>(json, HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
