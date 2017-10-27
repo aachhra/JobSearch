@@ -46,7 +46,7 @@ public class RestApiController {
 	public static final Logger logger = LoggerFactory.getLogger(RestApiController.class);
 
 	@RequestMapping(value = "/jobSearch", method = RequestMethod.GET)
-	public ResponseEntity<JsonObject> getJobs(@RequestParam(value = "name") String name,
+	public String getJobs(@RequestParam(value = "name") String name,
 			@RequestParam(value = "desc") String userDesc) {
 
 		System.out.println("In jobsearch");
@@ -76,7 +76,7 @@ public class RestApiController {
 			json.add("jobMatches", parser.parse(jobMatcher.toString()));
 			System.out.println(json);
 
-			return new ResponseEntity<JsonObject>(json, HttpStatus.OK);
+			return json.toString();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
