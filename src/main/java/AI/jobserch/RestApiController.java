@@ -45,7 +45,7 @@ import com.ibm.watson.developer_cloud.personality_insights.v3.model.Trait;
 public class RestApiController {
 	public static final Logger logger = LoggerFactory.getLogger(RestApiController.class);
 
-	@RequestMapping(value = "/jobSearch", method = RequestMethod.POST , consumes =MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/jobSearch", method = RequestMethod.POST , consumes =MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE )
 	public String getJobs(@RequestBody User user) {
 
 		System.out.println("In jobsearch"+ user.getDesc());
